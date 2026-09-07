@@ -1,1197 +1,813 @@
---// FFH4X - NFXNOBRU1
---// PAINEL + KEY SYSTEM
---// 50 KEYS SOMENTE COM LETRAS
+```lua
+--========================================================
+-- FFH4X - NFXNOBRU1
+-- PAINEL COMPLETO PARA SEU PRÓPRIO JOGO
+-- KEY + ABAS + SLIDERS + UI MODERNA
+--========================================================
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local LP = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
+local PlayerGui = LP:WaitForChild("PlayerGui")
 
---==================================================
+--========================================================
 -- KEYS
---==================================================
+--========================================================
 
 local ValidKeys = {
-	["FFH4X-KRAVM"] = true,
-	["FFH4X-PLQWT"] = true,
-	["FFH4X-ZMXRA"] = true,
-	["FFH4X-NVKLP"] = true,
-	["FFH4X-QWERT"] = true,
-	["FFH4X-HJXPK"] = true,
-	["FFH4X-BLMQA"] = true,
-	["FFH4X-TZKRV"] = true,
-	["FFH4X-WPMNX"] = true,
-	["FFH4X-GRQVL"] = true,
+	["FFH4X-KRAVM"]=true,["FFH4X-PLQWT"]=true,
+	["FFH4X-ZMXRA"]=true,["FFH4X-NVKLP"]=true,
+	["FFH4X-QWERT"]=true,["FFH4X-HJXPK"]=true,
+	["FFH4X-BLMQA"]=true,["FFH4X-TZKRV"]=true,
+	["FFH4X-WPMNX"]=true,["FFH4X-GRQVL"]=true,
 
-	["FFH4X-XKQPA"] = true,
-	["FFH4X-MZLWR"] = true,
-	["FFH4X-VBNQK"] = true,
-	["FFH4X-RXTPM"] = true,
-	["FFH4X-KJHQA"] = true,
-	["FFH4X-PXWLM"] = true,
-	["FFH4X-QAZTR"] = true,
-	["FFH4X-NMCKP"] = true,
-	["FFH4X-YTRVX"] = true,
-	["FFH4X-LPQAZ"] = true,
+	["FFH4X-XKQPA"]=true,["FFH4X-MZLWR"]=true,
+	["FFH4X-VBNQK"]=true,["FFH4X-RXTPM"]=true,
+	["FFH4X-KJHQA"]=true,["FFH4X-PXWLM"]=true,
+	["FFH4X-QAZTR"]=true,["FFH4X-NMCKP"]=true,
+	["FFH4X-YTRVX"]=true,["FFH4X-LPQAZ"]=true,
 
-	["FFH4X-ZQWNM"] = true,
-	["FFH4X-KXPLR"] = true,
-	["FFH4X-MQWAZ"] = true,
-	["FFH4X-RVKTP"] = true,
-	["FFH4X-HPLMX"] = true,
-	["FFH4X-TQZKA"] = true,
-	["FFH4X-WXNRP"] = true,
-	["FFH4X-GKQMV"] = true,
-	["FFH4X-BXRLT"] = true,
-	["FFH4X-VQPKN"] = true,
+	["FFH4X-ZQWNM"]=true,["FFH4X-KXPLR"]=true,
+	["FFH4X-MQWAZ"]=true,["FFH4X-RVKTP"]=true,
+	["FFH4X-HPLMX"]=true,["FFH4X-TQZKA"]=true,
+	["FFH4X-WXNRP"]=true,["FFH4X-GKQMV"]=true,
+	["FFH4X-BXRLT"]=true,["FFH4X-VQPKN"]=true,
 
-	["FFH4X-MLQTR"] = true,
-	["FFH4X-XZKPA"] = true,
-	["FFH4X-QMRVX"] = true,
-	["FFH4X-NPLWK"] = true,
-	["FFH4X-KQZMT"] = true,
-	["FFH4X-RPXVA"] = true,
-	["FFH4X-TKQWL"] = true,
-	["FFH4X-ZNRMP"] = true,
-	["FFH4X-WQKTX"] = true,
-	["FFH4X-HZPLQ"] = true,
+	["FFH4X-MLQTR"]=true,["FFH4X-XZKPA"]=true,
+	["FFH4X-QMRVX"]=true,["FFH4X-NPLWK"]=true,
+	["FFH4X-KQZMT"]=true,["FFH4X-RPXVA"]=true,
+	["FFH4X-TKQWL"]=true,["FFH4X-ZNRMP"]=true,
+	["FFH4X-WQKTX"]=true,["FFH4X-HZPLQ"]=true,
 
-	["FFH4X-BQXMR"] = true,
-	["FFH4X-VKZTP"] = true,
-	["FFH4X-MXQRL"] = true,
-	["FFH4X-PZKVA"] = true,
-	["FFH4X-QXWRT"] = true,
-	["FFH4X-NKMLP"] = true,
-	["FFH4X-RQZVX"] = true,
-	["FFH4X-TPLKM"] = true,
-	["FFH4X-WZQRP"] = true,
-	["FFH4X-KMXTA"] = true
+	["FFH4X-BQXMR"]=true,["FFH4X-VKZTP"]=true,
+	["FFH4X-MXQRL"]=true,["FFH4X-PZKVA"]=true,
+	["FFH4X-QXWRT"]=true,["FFH4X-NKMLP"]=true,
+	["FFH4X-RQZVX"]=true,["FFH4X-TPLKM"]=true,
+	["FFH4X-WZQRP"]=true,["FFH4X-KMXTA"]=true
 }
 
---==================================================
--- KEY GUI
---==================================================
+--========================================================
+-- CONFIGURAÇÕES
+--========================================================
+
+local Settings = {
+	WalkSpeed = 16,
+	FlySpeed = 60,
+	FOV = 200,
+	FOVEnabled = false,
+	RGB = true,
+
+	-- Estados das opções
+	CombatMode = false,
+	Box = false,
+	Line = false,
+	Health = false,
+	Name = false,
+	Distance = false,
+	Skeleton = false,
+	Spin = false,
+	Noclip = false,
+	Fly = false
+}
+
+--========================================================
+-- GUI
+--========================================================
 
 local Gui = Instance.new("ScreenGui")
 Gui.Name = "FFH4X_NFXNOBRU1"
 Gui.ResetOnSpawn = false
-Gui.Parent = LP:WaitForChild("PlayerGui")
+Gui.Parent = PlayerGui
+
+--========================================================
+-- FUNÇÕES VISUAIS
+--========================================================
+
+local function Corner(obj, radius)
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0, radius)
+	c.Parent = obj
+	return c
+end
+
+local function Stroke(obj, thickness)
+	local s = Instance.new("UIStroke")
+	s.Thickness = thickness
+	s.Parent = obj
+	return s
+end
+
+local function NewLabel(parent, text, size, pos, textSize)
+	local l = Instance.new("TextLabel")
+	l.BackgroundTransparency = 1
+	l.Size = size
+	l.Position = pos
+	l.Text = text
+	l.TextColor3 = Color3.new(1,1,1)
+	l.TextSize = textSize or 14
+	l.Font = Enum.Font.GothamBold
+	l.Parent = parent
+	return l
+end
+
+--========================================================
+-- KEY FRAME
+--========================================================
 
 local KeyFrame = Instance.new("Frame")
-KeyFrame.Size = UDim2.fromOffset(330, 220)
-KeyFrame.Position = UDim2.new(0.5, -165, 0.5, -110)
-KeyFrame.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+KeyFrame.Size = UDim2.fromOffset(370,235)
+KeyFrame.Position = UDim2.new(.5,-185,.5,-117)
+KeyFrame.BackgroundColor3 = Color3.fromRGB(13,14,18)
 KeyFrame.Parent = Gui
 
-local KeyCorner = Instance.new("UICorner")
-KeyCorner.CornerRadius = UDim.new(0, 14)
-KeyCorner.Parent = KeyFrame
+Corner(KeyFrame,16)
+local KeyStroke = Stroke(KeyFrame,2)
 
-local KeyStroke = Instance.new("UIStroke")
-KeyStroke.Thickness = 3
-KeyStroke.Parent = KeyFrame
+local KeyTitle = NewLabel(
+	KeyFrame,
+	"FFH4X",
+	UDim2.new(1,-30,0,32),
+	UDim2.fromOffset(15,14),
+	23
+)
 
-local KeyTitle = Instance.new("TextLabel")
-KeyTitle.Size = UDim2.new(1, -30, 0, 45)
-KeyTitle.Position = UDim2.fromOffset(15, 10)
-KeyTitle.BackgroundTransparency = 1
-KeyTitle.Text = "FFH4X - KEY SYSTEM"
-KeyTitle.TextColor3 = Color3.new(1, 1, 1)
-KeyTitle.TextSize = 20
-KeyTitle.Font = Enum.Font.GothamBold
-KeyTitle.Parent = KeyFrame
+KeyTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-local KeyInfo = Instance.new("TextLabel")
-KeyInfo.Size = UDim2.new(1, -30, 0, 25)
-KeyInfo.Position = UDim2.fromOffset(15, 52)
-KeyInfo.BackgroundTransparency = 1
-KeyInfo.Text = "Digite sua key para continuar"
-KeyInfo.TextColor3 = Color3.fromRGB(170, 170, 170)
-KeyInfo.TextSize = 13
-KeyInfo.Font = Enum.Font.Gotham
-KeyInfo.Parent = KeyFrame
+local KeySubtitle = NewLabel(
+	KeyFrame,
+	"KEY SYSTEM  •  NFXNOBRU1",
+	UDim2.new(1,-30,0,20),
+	UDim2.fromOffset(15,45),
+	11
+)
+
+KeySubtitle.TextColor3 = Color3.fromRGB(145,150,160)
+KeySubtitle.TextXAlignment = Enum.TextXAlignment.Left
 
 local KeyBox = Instance.new("TextBox")
-KeyBox.Size = UDim2.new(1, -30, 0, 42)
-KeyBox.Position = UDim2.fromOffset(15, 85)
-KeyBox.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+KeyBox.Size = UDim2.new(1,-30,0,45)
+KeyBox.Position = UDim2.fromOffset(15,78)
+KeyBox.BackgroundColor3 = Color3.fromRGB(24,26,32)
 KeyBox.PlaceholderText = "FFH4X-XXXXX"
-KeyBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+KeyBox.PlaceholderColor3 = Color3.fromRGB(90,95,105)
 KeyBox.Text = ""
-KeyBox.TextColor3 = Color3.new(1, 1, 1)
-KeyBox.TextSize = 15
+KeyBox.TextColor3 = Color3.new(1,1,1)
+KeyBox.TextSize = 14
 KeyBox.Font = Enum.Font.GothamBold
 KeyBox.ClearTextOnFocus = false
 KeyBox.Parent = KeyFrame
 
-local KeyBoxCorner = Instance.new("UICorner")
-KeyBoxCorner.CornerRadius = UDim.new(0, 9)
-KeyBoxCorner.Parent = KeyBox
+Corner(KeyBox,10)
 
-local EnterButton = Instance.new("TextButton")
-EnterButton.Size = UDim2.new(1, -30, 0, 42)
-EnterButton.Position = UDim2.fromOffset(15, 137)
-EnterButton.BackgroundColor3 = Color3.fromRGB(35, 120, 55)
-EnterButton.Text = "ENTRAR"
-EnterButton.TextColor3 = Color3.new(1, 1, 1)
-EnterButton.TextSize = 15
-EnterButton.Font = Enum.Font.GothamBold
-EnterButton.Parent = KeyFrame
+local Enter = Instance.new("TextButton")
+Enter.Size = UDim2.new(1,-30,0,43)
+Enter.Position = UDim2.fromOffset(15,133)
+Enter.BackgroundColor3 = Color3.fromRGB(35,120,70)
+Enter.Text = "ENTRAR"
+Enter.TextColor3 = Color3.new(1,1,1)
+Enter.TextSize = 14
+Enter.Font = Enum.Font.GothamBold
+Enter.Parent = KeyFrame
 
-local EnterCorner = Instance.new("UICorner")
-EnterCorner.CornerRadius = UDim.new(0, 9)
-EnterCorner.Parent = EnterButton
+Corner(Enter,10)
 
-local KeyStatus = Instance.new("TextLabel")
-KeyStatus.Size = UDim2.new(1, -30, 0, 25)
-KeyStatus.Position = UDim2.fromOffset(15, 183)
-KeyStatus.BackgroundTransparency = 1
-KeyStatus.Text = ""
-KeyStatus.TextColor3 = Color3.fromRGB(255, 80, 80)
-KeyStatus.TextSize = 12
-KeyStatus.Font = Enum.Font.GothamBold
-KeyStatus.Parent = KeyFrame
+local KeyStatus = NewLabel(
+	KeyFrame,
+	"",
+	UDim2.new(1,-30,0,25),
+	UDim2.fromOffset(15,188),
+	12
+)
 
---==================================================
--- CONFIG
---==================================================
-
-local RageAimbot = false
-local NormalAimbot = false
-
-local BoxESP = false
-local LineESP = false
-local HealthESP = false
-local NameESP = false
-local DistESP = false
-local SkeletonESP = false
-
-local Spin = false
-local Noclip = false
-local Fly = false
-local FOVEnabled = false
-
-local AimFOV = 200
-local SpinSpeed = 99
-local AimSmooth = 0.18
-
-local CurrentTarget = nil
-
---==================================================
--- MAIN GUI
---==================================================
+--========================================================
+-- MAIN
+--========================================================
 
 local Main = Instance.new("Frame")
-Main.Size = UDim2.fromOffset(300, 460)
-Main.Position = UDim2.new(0.5, -150, 0.5, -230)
-Main.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+Main.Size = UDim2.fromOffset(650,455)
+Main.Position = UDim2.new(.5,-325,.5,-227)
+Main.BackgroundColor3 = Color3.fromRGB(12,13,17)
 Main.Visible = false
 Main.Parent = Gui
 
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 14)
-MainCorner.Parent = Main
+Corner(Main,16)
+local MainStroke = Stroke(Main,2)
 
-local MainStroke = Instance.new("UIStroke")
-MainStroke.Thickness = 3
-MainStroke.Parent = Main
-
---==================================================
+--========================================================
 -- HEADER
---==================================================
+--========================================================
 
 local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, 60)
-Header.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+Header.Size = UDim2.new(1,0,0,65)
+Header.BackgroundColor3 = Color3.fromRGB(19,21,27)
 Header.Parent = Main
 
-local HeaderCorner = Instance.new("UICorner")
-HeaderCorner.CornerRadius = UDim.new(0, 14)
-HeaderCorner.Parent = Header
+Corner(Header,16)
 
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -60, 1, 0)
-Title.Position = UDim2.fromOffset(15, 0)
-Title.BackgroundTransparency = 1
-Title.Text = "FFH4X - NFXNOBRU1"
-Title.TextColor3 = Color3.new(1, 1, 1)
-Title.TextSize = 19
-Title.Font = Enum.Font.GothamBold
+local Title = NewLabel(
+	Header,
+	"FFH4X",
+	UDim2.fromOffset(260,30),
+	UDim2.fromOffset(20,8),
+	22
+)
+
 Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Header
 
---==================================================
--- CLOSE
---==================================================
+local SubTitle = NewLabel(
+	Header,
+	"NFXNOBRU1  •  PAINEL",
+	UDim2.fromOffset(260,20),
+	UDim2.fromOffset(21,37),
+	11
+)
+
+SubTitle.TextColor3 = Color3.fromRGB(130,135,145)
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 local Close = Instance.new("TextButton")
-Close.Size = UDim2.fromOffset(42, 42)
-Close.Position = UDim2.new(1, -50, 0, 9)
-Close.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Close.Size = UDim2.fromOffset(40,40)
+Close.Position = UDim2.new(1,-52,0,12)
+Close.BackgroundColor3 = Color3.fromRGB(29,31,38)
 Close.Text = "×"
-Close.TextColor3 = Color3.new(1, 1, 1)
-Close.TextSize = 28
+Close.TextColor3 = Color3.new(1,1,1)
+Close.TextSize = 26
 Close.Font = Enum.Font.GothamBold
 Close.Parent = Header
 
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0, 10)
-CloseCorner.Parent = Close
+Corner(Close,10)
 
---==================================================
+--========================================================
 -- DRAG
---==================================================
+--========================================================
 
-local DragHandle = Instance.new("TextButton")
-DragHandle.Size = UDim2.new(1, -55, 1, 0)
-DragHandle.BackgroundTransparency = 1
-DragHandle.Text = ""
-DragHandle.AutoButtonColor = false
-DragHandle.Parent = Header
+local Dragging = false
+local DragStart
+local StartPosition
 
-local dragging = false
-local dragStart
-local startPos
-
-DragHandle.InputBegan:Connect(function(input)
+Header.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
-		or input.UserInputType == Enum.UserInputType.Touch then
+	or input.UserInputType == Enum.UserInputType.Touch then
 
-		dragging = true
-		dragStart = input.Position
-		startPos = Main.Position
+		Dragging = true
+		DragStart = input.Position
+		StartPosition = Main.Position
+	end
+end)
 
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
+Header.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+	or input.UserInputType == Enum.UserInputType.Touch then
+
+		Dragging = false
 	end
 end)
 
 UserInputService.InputChanged:Connect(function(input)
-	if not dragging then
-		return
-	end
+	if not Dragging then return end
 
 	if input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch then
+	or input.UserInputType == Enum.UserInputType.Touch then
 
-		local delta = input.Position - dragStart
+		local Delta = input.Position - DragStart
 
 		Main.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
+			StartPosition.X.Scale,
+			StartPosition.X.Offset + Delta.X,
+			StartPosition.Y.Scale,
+			StartPosition.Y.Offset + Delta.Y
 		)
 	end
 end)
 
---==================================================
--- SCROLL
---==================================================
+--========================================================
+-- SIDEBAR
+--========================================================
 
-local Scroll = Instance.new("ScrollingFrame")
-Scroll.Size = UDim2.new(1, -20, 1, -75)
-Scroll.Position = UDim2.fromOffset(10, 68)
-Scroll.BackgroundTransparency = 1
-Scroll.BorderSizePixel = 0
-Scroll.ScrollBarThickness = 4
-Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-Scroll.Parent = Main
+local Sidebar = Instance.new("Frame")
+Sidebar.Size = UDim2.fromOffset(160,370)
+Sidebar.Position = UDim2.fromOffset(10,75)
+Sidebar.BackgroundColor3 = Color3.fromRGB(17,19,24)
+Sidebar.Parent = Main
 
-local Layout = Instance.new("UIListLayout")
-Layout.Padding = UDim.new(0, 7)
-Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-Layout.Parent = Scroll
+Corner(Sidebar,13)
 
-local function UpdateCanvas()
-	Scroll.CanvasSize = UDim2.fromOffset(
-		0,
-		Layout.AbsoluteContentSize.Y + 10
-	)
-end
+local SidePadding = Instance.new("UIPadding")
+SidePadding.PaddingTop = UDim.new(0,10)
+SidePadding.PaddingLeft = UDim.new(0,8)
+SidePadding.PaddingRight = UDim.new(0,8)
+SidePadding.Parent = Sidebar
 
-Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateCanvas)
+local SideLayout = Instance.new("UIListLayout")
+SideLayout.Padding = UDim.new(0,7)
+SideLayout.Parent = Sidebar
 
---==================================================
--- TOGGLE
---==================================================
+--========================================================
+-- CONTENT
+--========================================================
 
-local function CreateToggle(text, callback)
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1,-180,1,-75)
+Content.Position = UDim2.fromOffset(175,75)
+Content.BackgroundColor3 = Color3.fromRGB(17,19,24)
+Content.Parent = Main
+
+Corner(Content,13)
+
+local Tabs = {}
+local TabButtons = {}
+
+--========================================================
+-- CRIAR ABA
+--========================================================
+
+local function CreateTab(Name, Icon)
+
+	local Page = Instance.new("ScrollingFrame")
+	Page.Name = Name
+	Page.Size = UDim2.new(1,-20,1,-20)
+	Page.Position = UDim2.fromOffset(10,10)
+	Page.BackgroundTransparency = 1
+	Page.BorderSizePixel = 0
+	Page.ScrollBarThickness = 3
+	Page.Visible = false
+	Page.CanvasSize = UDim2.new(0,0,0,0)
+	Page.Parent = Content
+
+	local Layout = Instance.new("UIListLayout")
+	Layout.Padding = UDim.new(0,8)
+	Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	Layout.Parent = Page
+
+	local Padding = Instance.new("UIPadding")
+	Padding.PaddingTop = UDim.new(0,5)
+	Padding.PaddingBottom = UDim.new(0,10)
+	Padding.Parent = Page
+
+	Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		Page.CanvasSize = UDim2.fromOffset(
+			0,
+			Layout.AbsoluteContentSize.Y + 20
+		)
+	end)
+
 	local Button = Instance.new("TextButton")
-	Button.Size = UDim2.new(1, -5, 0, 42)
-	Button.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-	Button.Text = text .. "  [OFF]"
-	Button.TextColor3 = Color3.new(1, 1, 1)
-	Button.TextSize = 14
+	Button.Size = UDim2.new(1,0,0,45)
+	Button.BackgroundColor3 = Color3.fromRGB(24,26,32)
+	Button.Text = Icon.."  "..Name
+	Button.TextColor3 = Color3.fromRGB(185,188,195)
+	Button.TextSize = 13
 	Button.Font = Enum.Font.GothamBold
-	Button.Parent = Scroll
+	Button.Parent = Sidebar
 
-	local Corner = Instance.new("UICorner")
-	Corner.CornerRadius = UDim.new(0, 9)
-	Corner.Parent = Button
+	Corner(Button,10)
 
-	local enabled = false
+	Tabs[Name] = Page
+	TabButtons[Name] = Button
 
 	Button.MouseButton1Click:Connect(function()
-		enabled = not enabled
 
-		if enabled then
-			Button.Text = text .. "  [ON]"
-			Button.BackgroundColor3 = Color3.fromRGB(35, 120, 55)
-		else
-			Button.Text = text .. "  [OFF]"
-			Button.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+		for TabName,TabPage in pairs(Tabs) do
+			TabPage.Visible = false
+			TabButtons[TabName].BackgroundColor3 =
+				Color3.fromRGB(24,26,32)
+			TabButtons[TabName].TextColor3 =
+				Color3.fromRGB(185,188,195)
 		end
 
-		callback(enabled)
+		Page.Visible = true
+		Button.BackgroundColor3 =
+			Color3.fromRGB(40,105,190)
+		Button.TextColor3 = Color3.new(1,1,1)
+	end)
+
+	return Page
+end
+
+--========================================================
+-- TOGGLE
+--========================================================
+
+local function CreateToggle(parent,text,callback)
+
+	local Button = Instance.new("TextButton")
+	Button.Size = UDim2.new(1,-5,0,45)
+	Button.BackgroundColor3 = Color3.fromRGB(25,27,33)
+	Button.Text = text.."   OFF"
+	Button.TextColor3 = Color3.fromRGB(220,220,225)
+	Button.TextSize = 13
+	Button.Font = Enum.Font.GothamBold
+	Button.Parent = parent
+
+	Corner(Button,10)
+
+	local Enabled = false
+
+	Button.MouseButton1Click:Connect(function()
+
+		Enabled = not Enabled
+
+		if Enabled then
+			Button.Text = text.."   ON"
+			Button.BackgroundColor3 =
+				Color3.fromRGB(35,105,65)
+		else
+			Button.Text = text.."   OFF"
+			Button.BackgroundColor3 =
+				Color3.fromRGB(25,27,33)
+		end
+
+		callback(Enabled)
 	end)
 
 	return Button
 end
 
---==================================================
--- OPTIONS
---==================================================
-
-CreateToggle("🔥 AIMBOT RAGE", function(v)
-	RageAimbot = v
-
-	if not v then
-		CurrentTarget = nil
-	end
-end)
-
-CreateToggle("🎯 AIMBOT NORMAL", function(v)
-	NormalAimbot = v
-
-	if not v then
-		CurrentTarget = nil
-	end
-end)
-
-CreateToggle("📦 ESP BOX", function(v)
-	BoxESP = v
-end)
-
-CreateToggle("📏 ESP LINE", function(v)
-	LineESP = v
-end)
-
-CreateToggle("❤️ ESP VIDA", function(v)
-	HealthESP = v
-end)
-
-CreateToggle("🏷️ ESP NOME", function(v)
-	NameESP = v
-end)
-
-CreateToggle("📍 ESP DIST", function(v)
-	DistESP = v
-end)
-
-CreateToggle("🦴 ESP SKELETON", function(v)
-	SkeletonESP = v
-end)
-
-CreateToggle("🌀 SPIN 99", function(v)
-	Spin = v
-end)
-
-CreateToggle("👻 NOCLIP", function(v)
-	Noclip = v
-end)
-
-CreateToggle("🪽 FLY", function(v)
-	Fly = v
-
-	local Char = LP.Character
-	local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
-
-	if Hum then
-		Hum.PlatformStand = v
-	end
-end)
-
---==================================================
--- FOV BUTTON
---==================================================
-
-local FOVButton = Instance.new("TextButton")
-FOVButton.Size = UDim2.new(1, -5, 0, 42)
-FOVButton.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-FOVButton.Text = "🎯 FOV: " .. AimFOV
-FOVButton.TextColor3 = Color3.new(1, 1, 1)
-FOVButton.TextSize = 14
-FOVButton.Font = Enum.Font.GothamBold
-FOVButton.Parent = Scroll
-
-local FOVCorner = Instance.new("UICorner")
-FOVCorner.CornerRadius = UDim.new(0, 9)
-FOVCorner.Parent = FOVButton
-
-FOVButton.MouseButton1Click:Connect(function()
-	AimFOV += 25
-
-	if AimFOV > 500 then
-		AimFOV = 50
-	end
-
-	FOVButton.Text = "🎯 FOV: " .. AimFOV
-end)
-
-CreateToggle("⭕ FOV CIRCLE", function(v)
-	FOVEnabled = v
-end)
-
---==================================================
--- FOV CIRCLE
---==================================================
-
-local FOVCircle = Instance.new("Frame")
-FOVCircle.BackgroundTransparency = 1
-FOVCircle.Visible = false
-FOVCircle.Parent = Gui
-
-local FOVCircleCorner = Instance.new("UICorner")
-FOVCircleCorner.CornerRadius = UDim.new(1, 0)
-FOVCircleCorner.Parent = FOVCircle
-
-local FOVStroke = Instance.new("UIStroke")
-FOVStroke.Thickness = 2
-FOVStroke.Parent = FOVCircle
-
---==================================================
--- ESP
---==================================================
-
-local ESPs = {}
-
-local function CreateLine(parent)
-	local line = Instance.new("Frame")
-	line.BorderSizePixel = 0
-	line.AnchorPoint = Vector2.new(0.5, 0.5)
-	line.Visible = false
-	line.Parent = parent
-	return line
-end
-
-local function CreateESP(Player)
-	if Player == LP then
-		return
-	end
-
-	local Screen = Instance.new("ScreenGui")
-	Screen.Name = "ESP_" .. Player.Name
-	Screen.ResetOnSpawn = false
-	Screen.Parent = Gui
-
-	local Box = Instance.new("Frame")
-	Box.BackgroundTransparency = 1
-	Box.Visible = false
-	Box.Parent = Screen
-
-	local BoxStroke = Instance.new("UIStroke")
-	BoxStroke.Thickness = 2
-	BoxStroke.Parent = Box
-
-	local Line = Instance.new("Frame")
-	Line.BorderSizePixel = 0
-	Line.AnchorPoint = Vector2.new(0.5, 0.5)
-	Line.Visible = false
-	Line.Parent = Screen
-
-	local HealthBG = Instance.new("Frame")
-	HealthBG.BorderSizePixel = 0
-	HealthBG.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-	HealthBG.Visible = false
-	HealthBG.Parent = Screen
-
-	local Health = Instance.new("Frame")
-	Health.BorderSizePixel = 0
-	Health.AnchorPoint = Vector2.new(0, 1)
-	Health.Position = UDim2.fromScale(0, 1)
-	Health.Size = UDim2.new(1, 0, 1, 0)
-	Health.Parent = HealthBG
-
-	local Name = Instance.new("TextLabel")
-	Name.BackgroundTransparency = 1
-	Name.TextColor3 = Color3.new(1, 1, 1)
-	Name.TextStrokeTransparency = 0
-	Name.TextSize = 13
-	Name.Font = Enum.Font.GothamBold
-	Name.Visible = false
-	Name.Parent = Screen
-
-	local Dist = Instance.new("TextLabel")
-	Dist.BackgroundTransparency = 1
-	Dist.TextColor3 = Color3.new(1, 1, 1)
-	Dist.TextStrokeTransparency = 0
-	Dist.TextSize = 12
-	Dist.Font = Enum.Font.GothamBold
-	Dist.Visible = false
-	Dist.Parent = Screen
-
-	local SkeletonContainer = Instance.new("Frame")
-	SkeletonContainer.BackgroundTransparency = 1
-	SkeletonContainer.Size = UDim2.fromScale(1, 1)
-	SkeletonContainer.Parent = Screen
-
-	local SkeletonLines = {}
-
-	for i = 1, 15 do
-		SkeletonLines[i] = CreateLine(SkeletonContainer)
-	end
-
-	ESPs[Player] = {
-		Screen = Screen,
-		Box = Box,
-		BoxStroke = BoxStroke,
-		Line = Line,
-		HealthBG = HealthBG,
-		Health = Health,
-		Name = Name,
-		Dist = Dist,
-		SkeletonLines = SkeletonLines
-	}
-end
-
-local function RemoveESP(Player)
-	if ESPs[Player] then
-		ESPs[Player].Screen:Destroy()
-		ESPs[Player] = nil
-	end
-end
-
-for _, Player in ipairs(Players:GetPlayers()) do
-	CreateESP(Player)
-end
-
-Players.PlayerAdded:Connect(CreateESP)
-Players.PlayerRemoving:Connect(RemoveESP)
-
---==================================================
--- SKELETON BONES
---==================================================
-
-local R15Bones = {
-	{"Head", "UpperTorso"},
-	{"UpperTorso", "LowerTorso"},
-
-	{"UpperTorso", "LeftUpperArm"},
-	{"LeftUpperArm", "LeftLowerArm"},
-	{"LeftLowerArm", "LeftHand"},
-
-	{"UpperTorso", "RightUpperArm"},
-	{"RightUpperArm", "RightLowerArm"},
-	{"RightLowerArm", "RightHand"},
-
-	{"LowerTorso", "LeftUpperLeg"},
-	{"LeftUpperLeg", "LeftLowerLeg"},
-	{"LeftLowerLeg", "LeftFoot"},
-
-	{"LowerTorso", "RightUpperLeg"},
-	{"RightUpperLeg", "RightLowerLeg"},
-	{"RightLowerLeg", "RightFoot"}
-}
-
-local R6Bones = {
-	{"Head", "Torso"},
-	{"Torso", "Left Arm"},
-	{"Torso", "Right Arm"},
-	{"Torso", "Left Leg"},
-	{"Torso", "Right Leg"}
-}
-
-local function UpdateSkeleton(Player, ESP, Char)
-	local Bones = R15Bones
-
-	if Char:FindFirstChild("Torso") then
-		Bones = R6Bones
-	end
-
-	for i, Line in ipairs(ESP.SkeletonLines) do
-		local Bone = Bones[i]
-
-		if Bone then
-			local Part1 = Char:FindFirstChild(Bone[1])
-			local Part2 = Char:FindFirstChild(Bone[2])
-
-			if Part1 and Part2 then
-				local P1, V1 =
-					Camera:WorldToViewportPoint(Part1.Position)
-
-				local P2, V2 =
-					Camera:WorldToViewportPoint(Part2.Position)
-
-				if V1 or V2 then
-					local X = (P1.X + P2.X) / 2
-					local Y = (P1.Y + P2.Y) / 2
-
-					local DX = P2.X - P1.X
-					local DY = P2.Y - P1.Y
-
-					local Length =
-						math.sqrt(DX * DX + DY * DY)
-
-					Line.Position =
-						UDim2.fromOffset(X, Y)
-
-					Line.Size =
-						UDim2.fromOffset(2, Length)
-
-					Line.Rotation =
-						math.deg(math.atan2(DY, DX)) - 90
-
-					Line.Visible = SkeletonESP
-				else
-					Line.Visible = false
-				end
-			else
-				Line.Visible = false
-			end
-		else
-			Line.Visible = false
-		end
-	end
-end
-
---==================================================
--- TARGET
---==================================================
-
-local function GetTarget()
-	if CurrentTarget then
-		local Char = CurrentTarget.Character
-		local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
-		local Head = Char and Char:FindFirstChild("Head")
-
-		if Hum and Hum.Health > 0 and Head then
-			return CurrentTarget
-		end
-
-		CurrentTarget = nil
-	end
-
-	local Best
-	local BestDistance = AimFOV
-
-	local Viewport = Camera.ViewportSize
-	local Center =
-		Vector2.new(Viewport.X / 2, Viewport.Y / 2)
-
-	for _, Player in ipairs(Players:GetPlayers()) do
-		if Player ~= LP then
-			local Char = Player.Character
-			local Hum =
-				Char and Char:FindFirstChildOfClass("Humanoid")
-
-			local Head =
-				Char and Char:FindFirstChild("Head")
-
-			if Hum and Hum.Health > 0 and Head then
-				local Position, Visible =
-					Camera:WorldToViewportPoint(
-						Head.Position
-					)
-
-				if Visible then
-					local Distance =
-						(
-							Vector2.new(
-								Position.X,
-								Position.Y
-							) - Center
-						).Magnitude
-
-					if Distance < BestDistance then
-						BestDistance = Distance
-						Best = Player
-					end
-				end
-			end
-		end
-	end
-
-	CurrentTarget = Best
-	return Best
-end
-
---==================================================
--- UPDATE
---==================================================
-
-RunService.RenderStepped:Connect(function()
-
-	local Character = LP.Character
-	local Humanoid =
-		Character and Character:FindFirstChildOfClass("Humanoid")
-
-	local Root =
-		Character and Character:FindFirstChild("HumanoidRootPart")
-
-	-- RGB
-	local RGB =
-		Color3.fromHSV(
-			(tick() * 0.18) % 1,
-			1,
-			1
-		)
-
-	MainStroke.Color = RGB
-	KeyStroke.Color = RGB
-	FOVStroke.Color = RGB
-
-	-- FOV
-	local Viewport = Camera.ViewportSize
-
-	FOVCircle.Size =
-		UDim2.fromOffset(
-			AimFOV * 2,
-			AimFOV * 2
-		)
-
-	FOVCircle.Position =
-		UDim2.fromOffset(
-			Viewport.X / 2 - AimFOV,
-			Viewport.Y / 2 - AimFOV
-		)
-
-	FOVCircle.Visible = FOVEnabled
-
-	-- AIMBOT
-	if RageAimbot or NormalAimbot then
-
-		local Target = GetTarget()
-
-		if Target then
-			local Char = Target.Character
-			local Head =
-				Char and Char:FindFirstChild("Head")
-
-			if Head then
-
-				if RageAimbot then
-
-					Camera.CFrame =
-						CFrame.lookAt(
-							Camera.CFrame.Position,
-							Head.Position
-						)
-
-				elseif NormalAimbot then
-
-					local Desired =
-						CFrame.lookAt(
-							Camera.CFrame.Position,
-							Head.Position
-						)
-
-					Camera.CFrame =
-						Camera.CFrame:Lerp(
-							Desired,
-							AimSmooth
-						)
-				end
-			end
-		end
-	end
-
-	-- NOCLIP
-	if Noclip and Character then
-		for _, Part in ipairs(Character:GetDescendants()) do
-			if Part:IsA("BasePart") then
-				Part.CanCollide = false
-			end
-		end
-	end
-
-	-- SPIN
-	if Spin and Root then
-		Root.CFrame =
-			Root.CFrame *
-			CFrame.Angles(
-				0,
-				math.rad(SpinSpeed),
-				0
-			)
-	end
-
-	-- FLY
-	if Fly and Root and Humanoid then
-
-		Humanoid.PlatformStand = true
-
-		local Move = Humanoid.MoveDirection
-		local CamCF = Camera.CFrame
-
-		local Forward =
-			Vector3.new(
-				CamCF.LookVector.X,
-				0,
-				CamCF.LookVector.Z
-			)
-
-		local Right =
-			Vector3.new(
-				CamCF.RightVector.X,
-				0,
-				CamCF.RightVector.Z
-			)
-
-		if Forward.Magnitude > 0 then
-			Forward = Forward.Unit
-		end
-
-		if Right.Magnitude > 0 then
-			Right = Right.Unit
-		end
-
-		local Direction =
-			Forward * (-Move.Z)
-			+ Right * Move.X
-
-		local Vertical = 0
-
-		if UserInputService:IsKeyDown(
-			Enum.KeyCode.Space
-		) then
-
-			Vertical = 1
-
-		elseif UserInputService:IsKeyDown(
-			Enum.KeyCode.LeftShift
-		) then
-
-			Vertical = -1
-		end
-
-		Root.AssemblyLinearVelocity =
-			(Direction * 60)
-			+ Vector3.new(
-				0,
-				Vertical * 60,
-				0
-			)
-
-	elseif Humanoid and not Fly then
-		Humanoid.PlatformStand = false
-	end
-
-	-- ESP
-	for Player, ESP in pairs(ESPs) do
-
-		local Char = Player.Character
-
-		local Hum =
-			Char and Char:FindFirstChildOfClass("Humanoid")
-
-		local Head =
-			Char and Char:FindFirstChild("Head")
-
-		local PlayerRoot =
-			Char and Char:FindFirstChild(
-				"HumanoidRootPart"
-			)
-
-		if Char
-			and Hum
-			and Hum.Health > 0
-			and Head
-			and PlayerRoot then
-
-			local TopPosition, TopVisible =
-				Camera:WorldToViewportPoint(
-					Head.Position +
-					Vector3.new(0, 0.5, 0)
-				)
-
-			local BottomPosition, BottomVisible =
-				Camera:WorldToViewportPoint(
-					PlayerRoot.Position -
-					Vector3.new(0, 3, 0)
-				)
-
-			local TopY =
-				math.min(
-					TopPosition.Y,
-					BottomPosition.Y
-				)
-
-			local BottomY =
-				math.max(
-					TopPosition.Y,
-					BottomPosition.Y
-				)
-
-			local Height =
-				math.max(
-					BottomY - TopY,
-					20
-				)
-
-			local Width =
-				math.max(
-					Height * 0.55,
-					15
-				)
-
-			-- BOX
-			ESP.Box.Visible =
-				BoxESP and
-				(TopVisible or BottomVisible)
-
-			if ESP.Box.Visible then
-
-				ESP.Box.Position =
-					UDim2.fromOffset(
-						TopPosition.X - Width / 2,
-						TopY
-					)
-
-				ESP.Box.Size =
-					UDim2.fromOffset(
-						Width,
-						Height
-					)
-
-				ESP.BoxStroke.Color = RGB
-			end
-
-			-- LINE
-			ESP.Line.Visible = false
-
-			if LineESP then
-
-				local BoundingCF,
-					BoundingSize =
-					Char:GetBoundingBox()
-
-				local FeetWorld =
-					BoundingCF.Position -
-					Vector3.new(
-						0,
-						BoundingSize.Y / 2,
-						0
-					)
-
-				local FeetPosition, Visible =
-					Camera:WorldToViewportPoint(
-						FeetWorld
-					)
-
-				if Visible then
-
-					local StartX =
-						Viewport.X / 2
-
-					local StartY =
-						Viewport.Y - 5
-
-					local EndX =
-						FeetPosition.X
-
-					local EndY =
-						FeetPosition.Y
-
-					local DX =
-						EndX - StartX
-
-					local DY =
-						EndY - StartY
-
-					local Length =
-						math.sqrt(
-							DX * DX +
-							DY * DY
-						)
-
-					ESP.Line.Position =
-						UDim2.fromOffset(
-							(StartX + EndX) / 2,
-							(StartY + EndY) / 2
-						)
-
-					ESP.Line.Size =
-						UDim2.fromOffset(
-							3,
-							Length
-						)
-
-					ESP.Line.Rotation =
-						math.deg(
-							math.atan2(DY, DX)
-						) - 90
-
-					ESP.Line.BackgroundColor3 = RGB
-					ESP.Line.Visible = true
-				end
-			end
-
-			-- HEALTH
-			ESP.HealthBG.Visible = HealthESP
-
-			if HealthESP then
-
-				ESP.HealthBG.Position =
-					UDim2.fromOffset(
-						TopPosition.X -
-						Width / 2 - 7,
-						TopY
-					)
-
-				ESP.HealthBG.Size =
-					UDim2.fromOffset(
-						4,
-						Height
-					)
-
-				local HealthPercent =
-					math.clamp(
-						Hum.Health /
-						Hum.MaxHealth,
-						0,
-						1
-					)
-
-				ESP.Health.Size =
-					UDim2.new(
-						1,
-						0,
-						HealthPercent,
-						0
-					)
-
-				ESP.Health.BackgroundColor3 =
-					Color3.fromHSV(
-						HealthPercent * 0.33,
-						1,
-						1
-					)
-			end
-
-			-- NAME
-			ESP.Name.Visible = NameESP
-
-			if NameESP then
-
-				ESP.Name.Text = Player.Name
-
-				ESP.Name.Position =
-					UDim2.fromOffset(
-						TopPosition.X,
-						TopY - 20
-					)
-
-				ESP.Name.Size =
-					UDim2.fromOffset(
-						Width + 40,
-						18
-					)
-
-				ESP.Name.AnchorPoint =
-					Vector2.new(0.5, 0)
-			end
-
-			-- DISTANCE
-			ESP.Dist.Visible = DistESP
-
-			if DistESP and Root then
-
-				local Distance =
-					(
-						PlayerRoot.Position -
-						Root.Position
-					).Magnitude
-
-				ESP.Dist.Text =
-					math.floor(Distance) ..
-					" studs"
-
-				ESP.Dist.Position =
-					UDim2.fromOffset(
-						TopPosition.X,
-						BottomY + 3
-					)
-
-				ESP.Dist.Size =
-					UDim2.fromOffset(
-						Width + 40,
-						18
-					)
-
-				ESP.Dist.AnchorPoint =
-					Vector2.new(0.5, 0)
-			end
-
-			-- SKELETON
-			UpdateSkeleton(
-				Player,
-				ESP,
-				Char
-			)
-
-		else
-
-			ESP.Box.Visible = false
-			ESP.Line.Visible = false
-			ESP.HealthBG.Visible = false
-			ESP.Name.Visible = false
-			ESP.Dist.Visible = false
-
-			for _, Line in ipairs(
-				ESP.SkeletonLines
-			) do
-				Line.Visible = false
-			end
-		end
-	end
-end)
-
---==================================================
--- OPEN BUTTON
---==================================================
-
-local OpenButton = Instance.new("TextButton")
-OpenButton.Size = UDim2.fromOffset(60, 60)
-OpenButton.Position =
-	UDim2.new(
-		0,
-		20,
-		0.5,
-		-30
+--========================================================
+-- SLIDER
+--========================================================
+
+local function CreateSlider(
+	parent,
+	title,
+	minValue,
+	maxValue,
+	defaultValue,
+	callback
+)
+
+	local Container = Instance.new("Frame")
+	Container.Size = UDim2.new(1,-5,0,75)
+	Container.BackgroundColor3 = Color3.fromRGB(25,27,33)
+	Container.Parent = parent
+
+	Corner(Container,10)
+
+	local TitleLabel = NewLabel(
+		Container,
+		title,
+		UDim2.new(1,-90,0,25),
+		UDim2.fromOffset(15,7),
+		13
 	)
 
-OpenButton.BackgroundColor3 =
-	Color3.fromRGB(18, 18, 18)
+	TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
+	local ValueLabel = NewLabel(
+		Container,
+		tostring(defaultValue),
+		UDim2.fromOffset(60,25),
+		UDim2.new(1,-75,0,7),
+		13
+	)
+
+	ValueLabel.TextColor3 =
+		Color3.fromRGB(90,170,255)
+
+	ValueLabel.TextXAlignment =
+		Enum.TextXAlignment.Right
+
+	local Bar = Instance.new("Frame")
+	Bar.Size = UDim2.new(1,-30,0,7)
+	Bar.Position = UDim2.fromOffset(15,48)
+	Bar.BackgroundColor3 = Color3.fromRGB(42,44,50)
+	Bar.Parent = Container
+
+	Corner(Bar,5)
+
+	local Fill = Instance.new("Frame")
+	Fill.BackgroundColor3 = Color3.fromRGB(55,125,220)
+	Fill.Size = UDim2.new(
+		(defaultValue-minValue)/(maxValue-minValue),
+		0,1,0
+	)
+	Fill.Parent = Bar
+
+	Corner(Fill,5)
+
+	local Knob = Instance.new("Frame")
+	Knob.Size = UDim2.fromOffset(15,15)
+	Knob.AnchorPoint = Vector2.new(.5,.5)
+	Knob.Position = UDim2.new(
+		(defaultValue-minValue)/(maxValue-minValue),
+		0,.5,0
+	)
+	Knob.BackgroundColor3 = Color3.fromRGB(235,235,240)
+	Knob.Parent = Bar
+
+	Corner(Knob,20)
+
+	local SliderDragging = false
+
+	local function SetSlider(x)
+
+		local Percent = math.clamp(
+			(x-Bar.AbsolutePosition.X) /
+			Bar.AbsoluteSize.X,
+			0,1
+		)
+
+		local Value = math.floor(
+			minValue +
+			(maxValue-minValue)*Percent
+		)
+
+		local Pos =
+			(Value-minValue)/(maxValue-minValue)
+
+		Fill.Size =
+			UDim2.new(Pos,0,1,0)
+
+		Knob.Position =
+			UDim2.new(Pos,0,.5,0)
+
+		ValueLabel.Text = tostring(Value)
+
+		callback(Value)
+	end
+
+	Bar.InputBegan:Connect(function(input)
+
+		if input.UserInputType ==
+			Enum.UserInputType.MouseButton1
+		or input.UserInputType ==
+			Enum.UserInputType.Touch then
+
+			SliderDragging = true
+			SetSlider(input.Position.X)
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+
+		if not SliderDragging then return end
+
+		if input.UserInputType ==
+			Enum.UserInputType.MouseMovement
+		or input.UserInputType ==
+			Enum.UserInputType.Touch then
+
+			SetSlider(input.Position.X)
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input)
+
+		if input.UserInputType ==
+			Enum.UserInputType.MouseButton1
+		or input.UserInputType ==
+			Enum.UserInputType.Touch then
+
+			SliderDragging = false
+		end
+	end)
+
+	return Container
+end
+
+--========================================================
+-- SEÇÃO
+--========================================================
+
+local function CreateSection(parent,text)
+
+	local Section = NewLabel(
+		parent,
+		text,
+		UDim2.new(1,-5,0,25),
+		UDim2.fromOffset(0,0),
+		12
+	)
+
+	Section.TextColor3 =
+		Color3.fromRGB(90,155,235)
+
+	Section.TextXAlignment =
+		Enum.TextXAlignment.Left
+
+	return Section
+end
+
+--========================================================
+-- ABAS
+--========================================================
+
+local Combat = CreateTab("COMBATE","⚔")
+local ESP = CreateTab("ESP","👁")
+local Character = CreateTab("PERSONAGEM","👤")
+local Config = CreateTab("CONFIG","⚙")
+
+--========================================================
+-- COMBATE
+--========================================================
+
+CreateSection(Combat,"MIRA")
+
+CreateToggle(
+	Combat,
+	"🎯 MODO DE MIRA",
+	function(value)
+		Settings.CombatMode = value
+
+		-- Conecte aqui a mecânica de mira
+		-- do seu próprio jogo.
+	end
+)
+
+CreateToggle(
+	Combat,
+	"⭕ FOV CIRCLE",
+	function(value)
+		Settings.FOVEnabled = value
+
+		-- Indicador visual de FOV
+		-- do seu próprio jogo.
+	end
+)
+
+CreateSlider(
+	Combat,
+	"🎯 FOV",
+	50,
+	500,
+	200,
+	function(value)
+		Settings.FOV = value
+
+		-- Use Settings.FOV na mecânica
+		-- de FOV do seu próprio jogo.
+	end
+)
+
+--========================================================
+-- ESP
+--========================================================
+
+CreateSection(ESP,"VISUALIZAÇÃO")
+
+CreateToggle(ESP,"📦 BOX",function(value)
+	Settings.Box = value
+end)
+
+CreateToggle(ESP,"📏 LINHA",function(value)
+	Settings.Line = value
+end)
+
+CreateToggle(ESP,"❤️ VIDA",function(value)
+	Settings.Health = value
+end)
+
+CreateToggle(ESP,"🏷 NOME",function(value)
+	Settings.Name = value
+end)
+
+CreateToggle(ESP,"📍 DISTÂNCIA",function(value)
+	Settings.Distance = value
+end)
+
+CreateToggle(ESP,"🦴 SKELETON",function(value)
+	Settings.Skeleton = value
+end)
+
+--========================================================
+-- PERSONAGEM
+--========================================================
+
+CreateSection(Character,"MOVIMENTO")
+
+CreateSlider(
+	Character,
+	"🏃 VELOCIDADE",
+	16,
+	100,
+	16,
+	function(value)
+
+		Settings.WalkSpeed = value
+
+		-- No seu próprio jogo:
+		-- Humanoid.WalkSpeed = value
+	end
+)
+
+CreateToggle(
+	Character,
+	"🪽 FLY",
+	function(value)
+
+		Settings.Fly = value
+
+		-- Ligue/desligue aqui a mecânica
+		-- de Fly do seu próprio jogo.
+	end
+)
+
+CreateSlider(
+	Character,
+	"🪽 VELOCIDADE DO FLY",
+	20,
+	150,
+	60,
+	function(value)
+
+		Settings.FlySpeed = value
+
+		-- Use Settings.FlySpeed
+		-- na mecânica de Fly.
+	end
+)
+
+CreateToggle(
+	Character,
+	"🌀 SPIN",
+	function(value)
+
+		Settings.Spin = value
+
+	end
+)
+
+CreateToggle(
+	Character,
+	"👻 NOCLIP",
+	function(value)
+
+		Settings.Noclip = value
+
+		-- Mecânica/admin do seu próprio jogo.
+	end
+)
+
+--========================================================
+-- CONFIG
+--========================================================
+
+CreateSection(Config,"AJUSTES")
+
+CreateSlider(
+	Config,
+	"🏃 VELOCIDADE",
+	16,
+	100,
+	16,
+	function(value)
+		Settings.WalkSpeed = value
+	end
+)
+
+CreateSlider(
+	Config,
+	"🪽 FLY SPEED",
+	20,
+	150,
+	60,
+	function(value)
+		Settings.FlySpeed = value
+	end
+)
+
+CreateSlider(
+	Config,
+	"🎯 FOV",
+	50,
+	500,
+	200,
+	function(value)
+		Settings.FOV = value
+	end
+)
+
+CreateToggle(
+	Config,
+	"✨ RGB DA INTERFACE",
+	function(value)
+		Settings.RGB = value
+	end
+)
+
+--========================================================
+-- BOTÃO FLUTUANTE
+--========================================================
+
+local OpenButton = Instance.new("TextButton")
+OpenButton.Size = UDim2.fromOffset(58,58)
+OpenButton.Position = UDim2.new(0,20,.5,-29)
+OpenButton.BackgroundColor3 = Color3.fromRGB(18,20,25)
 OpenButton.Text = "F"
-OpenButton.TextColor3 =
-	Color3.new(1, 1, 1)
-
-OpenButton.TextSize = 24
-OpenButton.Font =
-	Enum.Font.GothamBold
-
+OpenButton.TextColor3 = Color3.new(1,1,1)
+OpenButton.TextSize = 23
+OpenButton.Font = Enum.Font.GothamBold
 OpenButton.Visible = false
 OpenButton.Parent = Gui
 
-local OpenCorner = Instance.new("UICorner")
-OpenCorner.CornerRadius =
-	UDim.new(0, 16)
-OpenCorner.Parent = OpenButton
+Corner(OpenButton,15)
 
-local OpenStroke = Instance.new("UIStroke")
-OpenStroke.Thickness = 3
-OpenStroke.Parent = OpenButton
+local OpenStroke = Stroke(OpenButton,2)
 
---==================================================
--- CLOSE / OPEN
---==================================================
+--========================================================
+-- ABRIR / FECHAR
+--========================================================
 
 Close.MouseButton1Click:Connect(function()
 	Main.Visible = false
@@ -1203,53 +819,91 @@ OpenButton.MouseButton1Click:Connect(function()
 	OpenButton.Visible = false
 end)
 
---==================================================
+--========================================================
 -- KEY CHECK
---==================================================
+--========================================================
 
 local function CheckKey()
+
 	local Input = string.upper(
-		KeyBox.Text:gsub("%s+", "")
+		KeyBox.Text:gsub("%s+","")
 	)
 
 	if ValidKeys[Input] then
 
 		KeyStatus.Text = "KEY CORRETA!"
 		KeyStatus.TextColor3 =
-			Color3.fromRGB(80, 255, 120)
+			Color3.fromRGB(70,230,120)
 
-		EnterButton.Text = "CARREGANDO..."
+		Enter.Text = "CARREGANDO..."
 
-		task.wait(0.7)
+		task.wait(.6)
 
 		KeyFrame.Visible = false
 		Main.Visible = true
-		OpenButton.Visible = false
+
+		Tabs["COMBATE"].Visible = true
+
+		TabButtons["COMBATE"].BackgroundColor3 =
+			Color3.fromRGB(40,105,190)
+
+		TabButtons["COMBATE"].TextColor3 =
+			Color3.new(1,1,1)
 
 	else
 
 		KeyStatus.Text = "KEY INVÁLIDA!"
 		KeyStatus.TextColor3 =
-			Color3.fromRGB(255, 70, 70)
+			Color3.fromRGB(255,70,70)
 
 		KeyBox.Text = ""
 	end
 end
 
-EnterButton.MouseButton1Click:Connect(CheckKey)
+Enter.MouseButton1Click:Connect(CheckKey)
 
 KeyBox.FocusLost:Connect(function(enterPressed)
+
 	if enterPressed then
 		CheckKey()
 	end
+
 end)
 
---==================================================
--- START
---==================================================
+--========================================================
+-- RGB
+--========================================================
 
+task.spawn(function()
+
+	while Gui.Parent do
+
+		if Settings.RGB then
+
+			local RGB = Color3.fromHSV(
+				(tick()*.12)%1,
+				.8,
+				1
+			)
+
+			MainStroke.Color = RGB
+			KeyStroke.Color = RGB
+			OpenStroke.Color = RGB
+
+		end
+
+		task.wait()
+	end
+
+end)
+
+--========================================================
+-- START
+--========================================================
+
+KeyFrame.Visible = true
 Main.Visible = false
 OpenButton.Visible = false
-KeyFrame.Visible = true
 
-print("FFH4X KEY SYSTEM carregado!")
+print("FFH4X - PAINEL COMPLETO CARREGADO")
+```
